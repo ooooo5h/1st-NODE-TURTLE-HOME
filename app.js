@@ -1,6 +1,6 @@
-const cors = require("cors");
+const cors    = require("cors");
 const express = require("express");
-const app = express();
+const app     = express();
 
 // 미들웨어 등록
 app.use(express.json());
@@ -16,4 +16,4 @@ app.get("/", (req, res) => {
 const port = 4000;
 app.listen(port, ()=> {
     console.log('4000포트 서버 켜졌습니다')
-})
+}) 
