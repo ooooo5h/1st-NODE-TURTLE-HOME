@@ -1,11 +1,13 @@
 const cors    = require("cors");
 const express = require("express");
+const routes  = require("./routes")
 const app     = express();
 
 // 미들웨어 등록
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
+app.use(routes);
 
 // 주소 라우팅
 app.get("/", (req, res) => {
