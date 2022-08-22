@@ -1,5 +1,7 @@
 const userDao = require("../models/userDao");
 const bcrypt  = require("bcrypt");
+const jwt     = require("jsonwebtoken");
+const res = require("express/lib/response");
 
 const signUp = async (user) => {
     const pwValidation = new RegExp(
@@ -20,6 +22,31 @@ const signUp = async (user) => {
     );
 }
 
+const signIn = async (user) => {
+    const userByEmail = await userDao.getUserByEmail(user.email)
+    
+    if (userByEmail.length === 0) {    // 유저 이메일이 DB에 없는 경우 이 에러가 떠야하는데  TypeError: Cannot read properties of undefined (reading 'password') 에러가 뜸?
+        throw {status : 404, message : "USER_DOES_NOT_EXIST"};
+    }
+
+    const checkedPasswordUser = await bcrypt.compare(user.password, userByEmail[0].password);
+
+    if (checkedPasswordUser) {
+        const secretKey = process.env.JWT_SECRET_KEY;
+        const algorithm = process.env.JWT_ALGORITHM;
+        const expiresIn = process.env.JWT_EXPIRES_IN;
+        const issuer    = process.env.JWT_ISSUER
+        const option    = {algorithm, expiresIn, issuer};
+
+        const token = jwt.sign({ id:userByEmail.id }, secretKey, option );
+        return {token : token, user : userByEmail[0].korean_name}
+
+    } else {
+        throw {status : 404, message : "PASSWORD_DOES_NOT_MATCH"};
+    }
+}
+
 module.exports = {
-    signUp
+    signUp,
+    signIn
 }

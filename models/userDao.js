@@ -10,6 +10,20 @@ const createUser = async (user) => {
     await db.query(sql);
 };
 
+const getUserByEmail = async (userEmail) => {
+    const sql = `
+    SELECT 
+        * 
+    FROM 
+        users
+    WHERE 
+        email = '${userEmail}';
+    `
+    const [rows, fields] = await db.query(sql);
+    return rows
+}
+
 module.exports = {
   createUser,
+  getUserByEmail
 };
