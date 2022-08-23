@@ -7,7 +7,7 @@ const app     = express();
 
 // 미들웨어 등록
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
 app.use(cors());
 app.use(routes);
 
