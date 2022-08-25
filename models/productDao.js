@@ -30,32 +30,38 @@ const getSortedProducts = async (sort) => {
             products as p on p.id = po.product_id
         GROUP BY
             product_id
-        ${sortObject[`${sort}`]}
-        `;
+        ${sortObject[`${sort}`]}`;
     const [rows, fields] = await db.query(sql);
     return rows;
 };
 
 const getProductById = async (productId) => {
-  const sql = `
-    SELECT
-        products.id, 
-        products.name,
-        products.number,
-        products.description,
-        products.image_url,
-    FROM
-        products
-    WHERE
-        id = ${productId}
-    `;
+    const sql = `
+        SELECT 
+            p.id, p.name, p.number, p.description, p.image_url, group_concat(json_object('size', s.name, 'price', po.price) separator '@') as options
+        FROM 
+            products as p
+        INNER JOIN 
+            products_options as po on po.product_id = p.id
+        INNER JOIN 
+            sizes as s on s.id = po.size_id
+        WHERE 
+            p.id=${productId};
+        `;
 
-  const [rows, fields] = await db.query(sql);
-  return rows;
+    const [rows, fields] = await db.query(sql);
+
+    const data = rows[0] 
+
+    data.options = data.options.split('@')
+    data.options = data.options.map(result => {
+        return JSON.parse(result)
+    })
+    return data
 };
 
 module.exports = {
-  getAllProducts,
-  getProductById,
-  getSortedProducts,
+    getAllProducts,
+    getProductById,
+    getSortedProducts,
 };
