@@ -1,36 +1,91 @@
 const db = require("../config/mysql");
 
-const getAllProducts = async () => {
-    const sql = `
+const getAllProducts = async (filterInfo) => {
+    let sql ;
+    if (!filterInfo.min_price) {
+        sql = `
         SELECT 
-            p.id, p.name, p.image_url, min(price) as 'min_price', max(price) as 'max_price'
+            p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
         FROM 
-            products_options as po
+            products AS p
         JOIN 
-            products as p on p.id = po.product_id
-        GROUP BY 
-            product_id;`;
+            products_options AS options_min
+                ON options_min.id = (
+                    SELECT id
+                    FROM products_options 
+                    WHERE products_options.product_id = p.id
+                    ORDER BY price ASC
+                    LIMIT 1)
+        JOIN 
+            products_options AS options_max
+                ON options_max.id = (
+                    SELECT id
+                    FROM products_options 
+                    WHERE products_options.product_id = p.id
+                    ORDER BY price DESC
+                    LIMIT 1);`
+    } else {
+        sql = `
+        SELECT 
+            p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
+        FROM 
+            products AS p
+        JOIN 
+            products_options AS options_min
+                ON options_min.id = (
+                    SELECT id
+                    FROM products_options 
+                    WHERE products_options.product_id = p.id
+                    ORDER BY price ASC
+                    LIMIT 1)
+        JOIN 
+            products_options AS options_max
+                ON options_max.id = (
+                    SELECT id
+                    FROM products_options 
+                    WHERE products_options.product_id = p.id
+                    ORDER BY price DESC
+                    LIMIT 1)
+        WHERE options_min.price < ${filterInfo.max_price} AND options_min.price > ${filterInfo.min_price}`;
+    }
+   
     const [rows, fields] = await db.query(sql);
     return rows;
 };
 
-const getSortedProducts = async (sort) => {
+const getSortedProducts = async (optionsInfo) => {
     const sortObject = {
         1: "ORDER BY p.created_at DESC",
-        2: "ORDER BY max_price DESC",
-        3: "ORDER BY min_price ASC"
+        2: "ORDER BY min_price DESC",
+        3: "ORDER BY min_price ASC",
     };
 
     const sql = `
         SELECT 
-            p.id, p.name, p.number, p.description, p.image_url, p.created_at, min(price) as 'min_price', max(price) as 'max_price'
-        FROM
-            products_options as po
+            p.id, p.name, p.image_url, options_min.price as min_price, options_max.price as max_price
+        FROM 
+            products AS p
         JOIN 
-            products as p on p.id = po.product_id
-        GROUP BY
-            product_id
-        ${sortObject[`${sort}`]}`;
+            products_options AS options_min
+                ON options_min.id = (
+                    SELECT id
+                    FROM products_options 
+                    WHERE products_options.product_id = p.id
+                    ORDER BY price ASC
+                    LIMIT 1
+                )
+        JOIN 
+            products_options AS options_max
+                ON options_max.id = (
+                    SELECT id
+                    FROM products_options 
+                    WHERE products_options.product_id = p.id
+                    ORDER BY price desc
+                    LIMIT 1
+                )
+        WHERE 
+            options_min.price < ${optionsInfo.max_price} AND options_min.price > ${optionsInfo.min_price}
+        ${sortObject[`${optionsInfo.sort}`]}`;
     const [rows, fields] = await db.query(sql);
     return rows;
 };
