@@ -94,11 +94,36 @@ const addCart = async (productOptionId, quantity, userId) => {
     }
 }
 
+const getCartByUserId = async (userId) => {
+    sql = `
+    SELECT
+        p.id AS product_id, p.name AS product_name, po.size_id AS option_id, s.name AS option_name ,po.price 
+    FROM 
+        carts AS c
+    JOIN 
+        products_options AS po
+    ON 
+        c.product_option_id = po.id
+    JOIN 
+        products AS p
+    ON 
+        po.product_id = p.id
+    JOIN 
+        sizes AS s
+    ON 
+        po.size_id = s.id
+    WHERE
+        c.user_id = ${userId}
+    `
+    const [rows, ] = await db.query(sql)
+    return rows
+}
 
 module.exports = {
     checkIfProductExists,
     checkCartId,
     getProductOptionId,
     createCart,
-    addCart
+    addCart,
+    getCartByUserId
 }

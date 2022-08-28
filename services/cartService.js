@@ -1,4 +1,5 @@
 const cartDao = require("../models/cartDao")
+const userDao = require("../models/userDao")
 
 const createCart = async (productId, sizeId, quantity, userId) => {
 
@@ -28,6 +29,26 @@ const createCart = async (productId, sizeId, quantity, userId) => {
     }
 }
 
+const getCartByUserId = async (userId) => {
+
+    // 회원가입된 유저인가? 
+    const userExist = await userDao.getUserById(userId);
+
+    if (userExist) {
+        const existUserId = userExist[0].id;
+        const result = await cartDao.getCartByUserId(existUserId);
+        if (result.length === 0) {
+            return "CART_IS_EMPTY"
+        } else {
+            return result
+        }
+    } else {
+        console.log('유저정보 없음')
+        throw {status : 404, message : "USER_DOES_NOT_MATCH"};
+    }
+}
+
 module.exports = {
-    createCart
+    createCart,
+    getCartByUserId
 }
