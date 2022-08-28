@@ -37,7 +37,7 @@ const signIn = async (user) => {
         const issuer    = process.env.JWT_ISSUER
         const option    = {algorithm, expiresIn, issuer};
 
-        const token = jwt.sign({ id:userByEmail.id }, secretKey, option );
+        const token = jwt.sign({ id:userByEmail[0].id }, secretKey, option );
         return {token : token, user : userByEmail[0].korean_name}
 
     } else {
