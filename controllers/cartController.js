@@ -1,5 +1,10 @@
 const cartService = require("../services/cartService");
 
+const errorHandler = (err, res) => {
+    console.log(err);
+    return res.status(err.status || 500).json({ message : err.message || "SERVER_ERROR"}); 
+}
+
 const createCart = async(req, res) => {
     try {
         const userId = req.user;
@@ -12,8 +17,7 @@ const createCart = async(req, res) => {
         const result = await cartService.createCart(productId, sizeId, quantity, userId);
         return res.status(200).json({message : `${result}`})
     } catch (e) {
-        console.log(e);
-        return res.status(e.status || 500).json({ message : e.message || "SERVER_ERROR"}); 
+        errorHandler (e, res);
     }
 }
 
@@ -32,8 +36,7 @@ const getCartByUserId = async(req, res) => {
             throw { status : 400, message : "USER_DOES_NOT_MATCH" }
         }
     } catch (e) {
-        console.log(e)
-        return res.status(e.status || 500).json({ message : e.message || "SERVER_ERROR"}); 
+        errorHandler (e, res);
     }
 }
 
@@ -48,8 +51,7 @@ const deleteCart = async (req, res) => {
         return res.status(200).json({message : resultMessage})
 
     } catch (e) {
-        console.log(e);
-        return res.status(e.status || 500).json({ message : e.message || "SERVER_ERROR"}); 
+        errorHandler (e, res);
     }
 }
 

@@ -1,5 +1,10 @@
 const productService = require("../services/productService");
 
+const errorHandler = (err, res) => {
+  console.log(err);
+  return res.status(err.status || 500).json({ message : err.message || "SERVER_ERROR"}); 
+}
+
 const getAllProducts = async (req, res) => {
   try {
     const optionsDto = {
@@ -11,10 +16,7 @@ const getAllProducts = async (req, res) => {
     const result = await productService.getAllProductList(optionsDto);
     return res.status(200).json({ result: result });
   } catch (e) {
-    console.log(e);
-    return res
-      .status(e.status || 500)
-      .json({ message: e.message || "SERVER_ERROR" });
+    errorHandler(e, res);
   }
 };
 
@@ -27,10 +29,7 @@ const getProductById = async (req, res) => {
     const result = await productService.getProductById(productId);
     return res.status(200).json({ result: result });
   } catch (e) {
-    console.log(e);
-    return res
-      .status(e.status || 500)
-      .json({ message: e.message || "SERVER_ERROR" });
+    errorHandler(e, res);
   }
 };
 

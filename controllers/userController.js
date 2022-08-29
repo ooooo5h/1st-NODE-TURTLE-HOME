@@ -1,5 +1,10 @@
 const userService = require("../services/userService");
 
+const errorHandler = (err, res) => {
+    console.log(err);
+    return res.status(err.status || 500).json({ message : err.message || "SERVER_ERROR"}); 
+  }
+
 const signUp = async (req, res) => {
     try {
         const userDto = req.body;
@@ -12,8 +17,7 @@ const signUp = async (req, res) => {
         return res.status(201).json({ message : "SIGN_UP_SUCCESS"})
 
     } catch (e) {
-        console.log(e);
-        return res.status(e.status || 500).json({ message : e.message || "SERVER_ERROR"});
+        errorHandler(e, res);
     }
 }
 
@@ -29,9 +33,7 @@ const signIn = async (req, res) => {
         return res.status(200).json({ message : `WELCOME ${result.user}`, "token" : result.token,})
 
     } catch (e) {
-        console.log(e);
-        return res.status(e.status || 500).json({ message : e.message || "SERVER_ERROR"});
-
+        errorHandler(e, res);
     }
 }
 
