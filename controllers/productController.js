@@ -8,9 +8,11 @@ const errorHandler = (err, res) => {
 const getAllProducts = async (req, res) => {
   try {
     const optionsDto = {
-      sort      : req.query.sort ?? 0,
-      min_price : req.query.min_price,
-      max_price : req.query.max_price,
+      sort     : req.query.sort ?? 0,
+      min_price: req.query.min_price,
+      max_price: req.query.max_price,
+      offset   : req.query.offset?? 0,
+      limit    : req.query.limit?? 20
     };
 
     const result = await productService.getAllProductList(optionsDto);

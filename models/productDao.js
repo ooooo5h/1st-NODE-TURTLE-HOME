@@ -23,7 +23,11 @@ const getAllProducts = async (filterInfo) => {
                     FROM products_options 
                     WHERE products_options.product_id = p.id
                     ORDER BY price DESC
-                    LIMIT 1);`
+                    LIMIT 1)
+        LIMIT 
+            ${filterInfo.limit}
+        OFFSET
+            ${filterInfo.offset};`
     } else {
         sql = `
         SELECT 
@@ -46,10 +50,14 @@ const getAllProducts = async (filterInfo) => {
                     WHERE products_options.product_id = p.id
                     ORDER BY price DESC
                     LIMIT 1)
-        WHERE options_min.price < ${filterInfo.max_price} AND options_min.price > ${filterInfo.min_price}`;
+        WHERE options_min.price < ${filterInfo.max_price} AND options_min.price > ${filterInfo.min_price}
+        LIMIT 
+            ${filterInfo.limit}
+        OFFSET
+            ${filterInfo.offset};`
     }
    
-    const [rows, fields] = await db.query(sql);
+    const [rows, ] = await db.query(sql);
     return rows;
 };
 
@@ -85,8 +93,12 @@ const getSortedProducts = async (optionsInfo) => {
                 )
         WHERE 
             options_min.price < ${optionsInfo.max_price} AND options_min.price > ${optionsInfo.min_price}
-        ${sortObject[`${optionsInfo.sort}`]}`;
-    const [rows, fields] = await db.query(sql);
+        ${sortObject[`${optionsInfo.sort}`]}
+        LIMIT 
+            ${filterInfo.limit}
+        OFFSET
+            ${filterInfo.offset}`;
+    const [rows, ] = await db.query(sql);
     return rows;
 };
 
