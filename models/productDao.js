@@ -65,7 +65,6 @@ const getAllProducts = async (filterInfo) => {
         OFFSET
             ${filterInfo.offset};`
     }
-   
     const [rows, ] = await db.query(sql);
     return rows;
 };
@@ -113,8 +112,6 @@ const getSortedProducts = async (optionsInfo) => {
         OFFSET
             ${optionsInfo.offset}`;
     const [rows, ] = await db.query(sql);
-    console.log('????????????po.size_id = ', optionsInfo.size)
-
     return rows;
 };
 
@@ -129,8 +126,7 @@ const getProductById = async (productId) => {
         INNER JOIN 
             sizes as s on s.id = po.size_id
         WHERE 
-            p.id=${productId};
-        `;
+            p.id=${productId};`
 
     const [rows, fields] = await db.query(sql);
 

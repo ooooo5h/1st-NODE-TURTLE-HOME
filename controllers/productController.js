@@ -15,7 +15,6 @@ const getAllProducts = async (req, res) => {
       offset   : req.query.offset?? 0,
       limit    : req.query.limit?? 20,
     };
-
     const result = await productService.getAllProductList(optionsDto);
     return res.status(200).json({ result: result });
   } catch (e) {
