@@ -2,7 +2,7 @@ const db = require("../config/mysql");
 
 const checkIfProductExists = async (productId, sizeId) => {
     try {
-        sql = `
+        const sql = `
         SELECT 
             p.id AS product_id, p.name AS product_name, po.price, po.size_id
         FROM 
@@ -23,7 +23,7 @@ const checkIfProductExists = async (productId, sizeId) => {
 
 const checkCartId = async (productId, sizeId, userId) => {
     try {
-        sql = `
+        const sql = `
         SELECT 
             c.id,  c.user_id, po.product_id, po.size_id, c.product_option_id, c.quantity, po.price
         FROM 
@@ -44,7 +44,7 @@ const checkCartId = async (productId, sizeId, userId) => {
 
 const getProductOptionId = async (productId, sizeId) => {
     try {
-        sql = `
+        const sql = `
         SELECT
             po.id 
         FROM
@@ -62,7 +62,7 @@ const getProductOptionId = async (productId, sizeId) => {
 
 const createCart = async (productOptionId, quantity, userId) => {
     try {
-        sql = 
+        const sql = 
         `
         INSERT INTO
             carts 
@@ -79,7 +79,7 @@ const createCart = async (productOptionId, quantity, userId) => {
 
 const addCart = async (productOptionId, quantity, userId) => {
     try {
-        sql = `
+        const sql = `
         UPDATE 
             carts AS c 
         SET
@@ -95,7 +95,7 @@ const addCart = async (productOptionId, quantity, userId) => {
 }
 
 const getCartByUserId = async (userId) => {
-    sql = `
+    const sql = `
     SELECT
         p.id AS product_id, p.name AS product_name, po.size_id AS option_id, s.name AS option_name ,po.price 
     FROM 
@@ -119,11 +119,49 @@ const getCartByUserId = async (userId) => {
     return rows
 }
 
+const getCartById = async (cartId) => {
+    const sql = `
+    SELECT 
+        c.id 
+    FROM 
+        carts AS c 
+    WHERE c.id = ${cartId};
+    `
+    const [rows, ] = await db.query(sql)
+    return rows
+}
+
+const getCartMatchWithUserID = async (userId, cartId) => {
+    const sql = `
+    SELECT 
+        c.id, c.product_option_id, c.quantity, c.user_id
+    FROM 
+        carts AS c
+    WHERE 
+        c.user_id = ${userId} AND c.id = ${cartId};
+    `
+    const [rows, ] = await db.query(sql)
+    return rows
+}
+
+const deleteCartById = async (cartId) => {
+    const sql = `
+    DELETE 
+    FROM 
+        carts AS c 
+    WHERE c.id = ${cartId};
+    `
+    await db.query(sql)
+}
+
 module.exports = {
     checkIfProductExists,
     checkCartId,
     getProductOptionId,
     createCart,
     addCart,
-    getCartByUserId
+    getCartByUserId,
+    getCartById,
+    deleteCartById,
+    getCartMatchWithUserID
 }

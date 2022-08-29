@@ -32,10 +32,11 @@ const createCart = async (productId, sizeId, quantity, userId) => {
 const getCartByUserId = async (userId) => {
 
     // 회원가입된 유저인가? 
-    const userExist = await userDao.getUserById(userId);
+    const existUser = await userDao.getUserById(userId);
 
-    if (userExist) {
-        const existUserId = userExist[0].id;
+    if (existUser) {
+        
+        const existUserId = existUser[0].id;
         const result = await cartDao.getCartByUserId(existUserId);
         if (result.length === 0) {
             return "CART_IS_EMPTY"
@@ -48,7 +49,32 @@ const getCartByUserId = async (userId) => {
     }
 }
 
+const getCartByIdAndUserId = async (userId, cartId) => {
+    // cart id가 해당 user의 카트아이디가 맞는지 확인하기
+    const existCartMatchWithUserID = await cartDao.getCartMatchWithUserID(userId, cartId)
+    
+    if (existCartMatchWithUserID.length === 0) {
+        throw {status : 404, message : "CART_DOES_NOT_EXIST"}
+    } else {
+        return existCartMatchWithUserID
+    }
+}
+
+const deleteCart = async (cartId) => {
+    // 실제있는 카트id인가
+    const existCartId = await cartDao.getCartById(cartId);
+
+    if (existCartId.length === 0) {
+        throw {status : 404, message : "CART_DOES_NOT_EXIST"};
+    } else {
+        await cartDao.deleteCartById(cartId);
+        return "CART_DELETED_SUCCESSFULLY"
+    }
+}
+
 module.exports = {
     createCart,
-    getCartByUserId
+    getCartByUserId,
+    getCartByIdAndUserId,
+    deleteCart
 }
