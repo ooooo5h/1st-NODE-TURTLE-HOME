@@ -11,8 +11,9 @@ const getAllProducts = async (req, res) => {
       sort     : req.query.sort ?? 0,
       min_price: req.query.min_price,
       max_price: req.query.max_price,
+      size     : req.query.size?? 0,
       offset   : req.query.offset?? 0,
-      limit    : req.query.limit?? 20
+      limit    : req.query.limit?? 20,
     };
 
     const result = await productService.getAllProductList(optionsDto);

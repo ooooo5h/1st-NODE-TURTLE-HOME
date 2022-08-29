@@ -24,6 +24,10 @@ const getAllProducts = async (filterInfo) => {
                     WHERE products_options.product_id = p.id
                     ORDER BY price DESC
                     LIMIT 1)
+        JOIN
+            products_options AS po ON po.product_id = p.id\
+        AND 
+            po.size_id = ${filterInfo.size}
         LIMIT 
             ${filterInfo.limit}
         OFFSET
@@ -50,7 +54,12 @@ const getAllProducts = async (filterInfo) => {
                     WHERE products_options.product_id = p.id
                     ORDER BY price DESC
                     LIMIT 1)
-        WHERE options_min.price < ${filterInfo.max_price} AND options_min.price > ${filterInfo.min_price}
+        JOIN
+            products_options AS po ON po.product_id = p.id
+        WHERE 
+            options_min.price < ${filterInfo.max_price} AND options_min.price > ${filterInfo.min_price}
+        AND 
+            po.size_id = ${filterInfo.size}
         LIMIT 
             ${filterInfo.limit}
         OFFSET
@@ -91,14 +100,21 @@ const getSortedProducts = async (optionsInfo) => {
                     ORDER BY price desc
                     LIMIT 1
                 )
+        JOIN
+			products_options AS po
+				ON po.product_id = p.id
         WHERE 
             options_min.price < ${optionsInfo.max_price} AND options_min.price > ${optionsInfo.min_price}
+        AND 
+			po.size_id = ${optionsInfo.size}
         ${sortObject[`${optionsInfo.sort}`]}
         LIMIT 
-            ${filterInfo.limit}
+            ${optionsInfo.limit}
         OFFSET
-            ${filterInfo.offset}`;
+            ${optionsInfo.offset}`;
     const [rows, ] = await db.query(sql);
+    console.log('????????????po.size_id = ', optionsInfo.size)
+
     return rows;
 };
 
