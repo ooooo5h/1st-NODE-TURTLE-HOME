@@ -30,7 +30,7 @@ const signIn = async (req, res) => {
         }
 
         const result = await userService.signIn (userDto);
-        return res.status(200).json({ message : `WELCOME ${result.user}`, "token" : result.token,})
+        return res.status(200).json({ message : `WELCOME ${result.user}`, "accessToken" : result.accessToken, "refreshToken" : result.refreshToken})
 
     } catch (e) {
         errorHandler(e, res);

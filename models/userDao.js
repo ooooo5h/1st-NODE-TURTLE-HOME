@@ -36,8 +36,21 @@ const getUserById = async (userId) => {
     return rows
 }
 
+const saveUserRefreshToken = async (userId, refreshToken) => {
+    const sql = `
+    UPDATE 
+        users
+    SET
+        users.refresh_token = '${refreshToken}'
+    WHERE
+        users.id = ${userId}
+    `
+    await db.query(sql);
+}
+
 module.exports = {
   createUser,
   getUserByEmail,
-  getUserById
+  getUserById,
+  saveUserRefreshToken
 };
