@@ -11,6 +11,7 @@ const dbConfig = {
     database: process.env.DB_NAME
 }
 
+/// 유틸로 빼야한다.
 const connection = mysql.createPool(dbConfig);
 
 module.exports = connection;

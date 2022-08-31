@@ -41,15 +41,10 @@ const signIn = async (user) => {
         const refreshTokenOption = {algorithm, expiresIn : expiresInRefresh, issuer}
 
         const accessToken  = jwt.sign({ id:userByEmail[0].id }, secretKey, option );
-        const refreshToken = jwt.sign({}, secretKey, refreshTokenOption );    
-        // Q2. 
-        // 여기서도 로그인할 때, DB에 저장된 refreshToken의 만료기간을 확인해서
-        // refresh_token 만료 전 => accessToken 발급
-        // refresh_token 만료 후 => accessToken 발급 + refreshToken 저장
-        // 분기처리를 해줘야 하나요? 근데 그걸 어떻게 할 수 있지?
+        const refreshToken = jwt.sign({}, secretKey, refreshTokenOption );   
 
         await userDao.saveUserRefreshToken(userByEmail[0].id, refreshToken)
-        return {accessToken : accessToken, refreshToken : refreshToken, user : userByEmail[0].korean_name}
+        return {accessToken, refreshToken, user : userByEmail[0].korean_name}
     } else {
         throw {status : 404, message : "PASSWORD_DOES_NOT_MATCH"};
     }

@@ -3,7 +3,7 @@ const db = require("../config/mysql");
 const getUserByRefreshToken = async (refreshToken) => {
     const sql = `
     SELECT
-        u.refresh_token
+        u.id
     FROM
         users AS u
     WHERE

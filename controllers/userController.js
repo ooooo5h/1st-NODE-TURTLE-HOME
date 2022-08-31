@@ -1,5 +1,6 @@
 const userService = require("../services/userService");
 
+// 얘도 유틸로 갈 수 있음
 const errorHandler = (err, res) => {
     console.log(err);
     return res.status(err.status || 500).json({ message : err.message || "SERVER_ERROR"}); 
