@@ -68,7 +68,7 @@ const addCart = async (productOptionId, quantity, userId) => {
 const getCartByUserId = async (userId) => {
     const sql = `
         SELECT
-            p.id AS product_id, p.name AS product_name, po.size_id AS option_id, s.name AS option_name ,po.price 
+            p.id AS product_id, p.name AS product_name, po.size_id AS option_id, s.name AS option_name , c.quantity, po.price 
         FROM 
             carts AS c
         JOIN 
