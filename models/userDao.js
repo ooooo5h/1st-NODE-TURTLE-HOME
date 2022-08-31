@@ -19,7 +19,7 @@ const getUserByEmail = async (userEmail) => {
     WHERE 
         email = '${userEmail}';
     `
-    const [rows, fields] = await db.query(sql);
+    const [rows, ] = await db.query(sql);
     return rows
 }
 

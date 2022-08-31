@@ -128,7 +128,7 @@ const getProductById = async (productId) => {
         WHERE 
             p.id=${productId};`
 
-    const [rows, fields] = await db.query(sql);
+    const [rows, ] = await db.query(sql);
 
     const data = rows[0] 
 
