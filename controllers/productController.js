@@ -1,9 +1,5 @@
 const productService = require("../services/productService");
-
-const errorHandler = (err, res) => {
-  console.log(err);
-  return res.status(err.status || 500).json({ message : err.message || "SERVER_ERROR"}); 
-}
+const errorHandler   = require("../utils/errorHandler").errorHandler;
 
 const getAllProducts = async (req, res) => {
   try {

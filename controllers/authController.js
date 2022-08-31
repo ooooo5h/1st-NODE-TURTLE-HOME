@@ -1,4 +1,5 @@
 const authService = require("../services/authService");
+const errorHandler = require("../utils/errorHandler").errorHandler;
 
 const getAccessToken = async (req, res) => {
     try {
@@ -14,8 +15,7 @@ const getAccessToken = async (req, res) => {
         const result = await authService.getAccessToken(refreshToken);
         return res.status(200).json({ message : 'NEW_ACCESS_TOKEN_CREATED', "accessToken" : result.accessToken});
     } catch (e) {
-        console.log(e);
-        return res.status(e.status || 500).json({ message : e.message || "SERVER_ERROR"});     
+        errorHandler (e, res);
     }
 }
 

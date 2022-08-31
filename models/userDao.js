@@ -1,4 +1,4 @@
-const db = require("../config/mysql");
+const db = require("../utils/database");
 
 const createUser = async (user) => {
   const sql = `

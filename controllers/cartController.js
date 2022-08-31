@@ -1,9 +1,5 @@
 const cartService = require("../services/cartService");
-
-const errorHandler = (err, res) => {
-    console.log(err);
-    return res.status(err.status || 500).json({ message : err.message || "SERVER_ERROR"}); 
-}
+const errorHandler = require("../utils/errorHandler").errorHandler;
 
 const createCart = async(req, res) => {
     try {
@@ -23,13 +19,10 @@ const createCart = async(req, res) => {
 
 const getCartByUserId = async(req, res) => {
     try {
-        // 해당 유저인지 확인해야함.
         const userId     = req.user;
         const pathUserId = req.params.userId;
-        // console.log('d/???', userId, pathUserId, typeof userId, typeof pathUserId)   ==> 둘이 타입이 다름. number vs string임.
 
         if (userId == pathUserId) {
-            // 둘이 같은 경우에만 => 경로로 입력한 유저의 정보와 실제 첨부된 유저의 토큰상 유저 id가 일치하는 경우에만!
             const resultMessage = await cartService.getCartByUserId(userId);
             return res.status(200).json({message : resultMessage})
         } else {

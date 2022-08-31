@@ -1,4 +1,4 @@
-const db = require("../config/mysql");
+const db = require("../utils/database");
 
 const checkIfProductExists = async (productId, sizeId) => {
     const sql = `
@@ -75,7 +75,7 @@ const getCartByUserId = async (userId) => {
             products_options AS po
         ON 
             c.product_option_id = po.id
-        JOIN 
+        JOIN  
             products AS p
         ON 
             po.product_id = p.id
