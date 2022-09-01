@@ -48,8 +48,20 @@ const deleteCart = async (req, res) => {
     }
 }
 
+const deleteAllCart = async (req, res) => {
+    try {
+        const userId = req.user;
+
+        await cartService.deleteAllCart(userId);
+        return res.status(200).json({message : "DELETED_SUCCESSFULLY"})
+    } catch (e) {
+        errorHandler (e, res);
+    }
+}
+
 module.exports = {
     createCart,
     getCartByUserId,
-    deleteCart
+    deleteCart,
+    deleteAllCart
 }

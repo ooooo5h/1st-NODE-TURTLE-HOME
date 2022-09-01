@@ -122,6 +122,17 @@ const deleteCartById = async (cartId) => {
     await db.query(sql)
 }
 
+const deleteAllCartByUserId = async (userId) => {
+    const sql = `
+    DELETE
+    FROM 
+        carts AS c
+    WHERE 
+        c.user_id = ${userId};
+    `
+    await db.query(sql);
+}
+
 module.exports = {
     checkIfProductExists,
     checkCartId,
@@ -131,5 +142,6 @@ module.exports = {
     getCartByUserId,
     getCartById,
     deleteCartById,
+    deleteAllCartByUserId,
     getCartMatchWithUserID
 }
