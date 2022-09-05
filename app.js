@@ -1,5 +1,6 @@
 const cors    = require("cors");
 const express = require("express");
+const { swaggerUi, specs } = require("./apidocs/swagger");
 
 const routes  = require("./routes");
 
@@ -9,6 +10,7 @@ const app     = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cors());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(routes);
 
 // 서버 키기
