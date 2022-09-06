@@ -28,6 +28,19 @@
 *                message:
 *                    type: string
 *                    example: "USER_DOES_NOT_MATCH"
+*      404:
+*        description: 해당 유저의 장바구니 존재하지 않음
+*        content:
+*          application/json:
+*            schema:
+*              type: object
+*              properties:
+*                status:
+*                    type: number
+*                    example: 404
+*                message:
+*                    type: string
+*                    example: "CART_DOES_NOT_EXIST"
 *      200:
 *        description: 장바구니 조회 성공
 *        content:

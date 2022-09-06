@@ -29,7 +29,7 @@ const getCartByUserId = async (userId) => {
         const existUserId = existUser[0].id;
         const result = await cartDao.getCartByUserId(existUserId);
         if (result.length === 0) {
-            return "CART_IS_EMPTY"
+            throw {status : 404, message : "CART_DOES_NOT_EXIST"};
         } else {
             return result
         }

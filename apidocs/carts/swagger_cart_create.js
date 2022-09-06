@@ -27,7 +27,7 @@
 *                description: "수량"
 *    responses:
 *      400:
-*        description: body에 해당 데이터가 없을 때
+*        description: body에 해당 데이터가 없을 때 or 없는 상품 입력시 or 
 *        content:
 *          application/json:
 *            schema:
@@ -38,8 +38,8 @@
 *                    example: 400
 *                message:
 *                    type: string
-*                    example: "KEY_ERROR"
-*      200:
+*                    example: "KEY_ERROR or PRODUCT_DOES_NOT_EXIST"
+*      201:
 *        description: 장바구니 담기 성공
 *        content:
 *          application/json:
@@ -51,5 +51,5 @@
 *                    example: 200
 *                  message:
 *                    type: string
-*                    example: "장바구니 담기/업데이트 성공"
+*                    example: "CART_CREATED_SUCCESSFULLY or /업데이트 성공"
 */
