@@ -27,7 +27,7 @@
 *                description: "수량"
 *    responses:
 *      400:
-*        description: body에 해당 데이터가 없을 때 or 없는 상품 입력시 or 
+*        description: body에 해당 데이터가 없을 때 or 없는 상품 입력시 
 *        content:
 *          application/json:
 *            schema:
@@ -48,8 +48,8 @@
 *              properties:
 *                  status:
 *                    type: number
-*                    example: 200
+*                    example: 201
 *                  message:
 *                    type: string
-*                    example: "CART_CREATED_SUCCESSFULLY or /업데이트 성공"
+*                    example: "CART_CREATED_SUCCESSFULLY or PRODUCT_QUANTITY_UPDATED_SUCCESSFULLY"
 */

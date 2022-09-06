@@ -15,7 +15,7 @@
 *          type : integer
 *        required: true
 *    responses:
-*      400:
+*      401:
 *        description: 토큰의 유저정보와 path로 들어온 userId 일치하지 않음
 *        content:
 *          application/json:
@@ -24,7 +24,7 @@
 *              properties:
 *                status:
 *                    type: number
-*                    example: 400
+*                    example: 401
 *                message:
 *                    type: string
 *                    example: "USER_DOES_NOT_MATCH"
@@ -71,5 +71,4 @@
 *                      price:
 *                        type: string
 *                        example: "75000.00"
-
 */

@@ -11,7 +11,7 @@ const createCart = async(req, res) => {
         }
 
         const result = await cartService.createCart(productId, sizeId, quantity, userId);
-        return res.status(200).json({message : `${result}`})
+        return res.status(201).json({message : `${result}`})
     } catch (e) {
         errorHandler (e, res);
     }
@@ -26,7 +26,7 @@ const getCartByUserId = async(req, res) => {
             const resultMessage = await cartService.getCartByUserId(userId);
             return res.status(200).json({message : resultMessage})
         } else {
-            throw { status : 400, message : "USER_DOES_NOT_MATCH" }
+            throw { status : 401, message : "USER_DOES_NOT_MATCH" }
         }
     } catch (e) {
         errorHandler (e, res);
