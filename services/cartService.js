@@ -60,7 +60,15 @@ const deleteCart = async (cartId) => {
 }
 
 const deleteAllCart = async (userId) => {
-    await cartDao.deleteAllCartByUserId(userId);
+
+    const existCart = await cartDao.getCartByUserId(userId)
+
+    if (existCart.length === 0) {
+        throw {status : 404, message : "CART_DOES_NOT_EXIST"}
+    } else {
+        await cartDao.deleteAllCartByUserId(userId);
+        return "CART_DELETED_SUCCESSFULLY"
+    }
 }
 
 module.exports = {
