@@ -2,7 +2,10 @@ const jwt = require("jsonwebtoken");
 
 const verifyAccessToken = async (req, res, next) => {
     try {
-        const token         = req.header('Authorization');
+        if (!req.header('Authorization')) {
+            throw {status : 401, message : "TOKEN_REQUIRED"};
+        }
+        const token         = req.headers.authorization.split(' ')[1]
         const decoded_token = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
         req.user = decoded_token.id;

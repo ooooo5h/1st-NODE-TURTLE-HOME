@@ -15,6 +15,16 @@ const options = {
                 url : "http://localhost:4000",  // api에 대한 기본 url을 정의하며배열로 여러 ur 정의 가능
             },
         ],
+        components : {
+            securitySchemes: {   // 인증 관련  => bearer : jwt or oauth를 나타내는 인증타입
+                Authorization: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                    value: "bearer <JWT token here>"
+                }
+            },
+        },
     },
     apis : ["./apidocs/*/*.js"],  // swagger 파일 연동
 }

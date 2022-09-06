@@ -31,7 +31,7 @@
 *                description: "유저 핸드폰 번호"
 *    responses:
 *      400:
-*        description: body에 해당 데이터가 없을 때 / 비밀번호 형식 오류 
+*        description: body에 해당 데이터가 없을 때 or 비밀번호 형식 오류 
 *        content:
 *          application/json:
 *            schema:
@@ -42,7 +42,7 @@
 *                    example: 400
 *                message:
 *                    type: string
-*                    example: "KEY_ERROR or PASSWORD_IS_NOT_VALID or PASSWORD_IS_NOT_VALID"
+*                    example: "KEY_ERROR or PASSWORD_IS_NOT_VALID"
 *      201:
 *        description: 회원가입 성공
 *        content:

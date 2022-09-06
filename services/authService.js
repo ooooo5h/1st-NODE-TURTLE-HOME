@@ -6,7 +6,6 @@ const createAccessToken = require("../utils/jwt").createAccessToken;
 const getAccessToken = async (refreshToken) => {
     try {
         const decodedToken = jwt.verify(refreshToken, config.secretKey);
-
         if (decodedToken.iss === config.issuer) {
             const user = await authDao.getUserByRefreshToken(refreshToken)
 
