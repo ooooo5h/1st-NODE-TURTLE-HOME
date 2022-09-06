@@ -12,6 +12,20 @@
 - Express
 - MySQL
 
+# Directory Tree
+```
+├── apidocs
+│   ├── carts
+│   ├── products
+│   └── users
+├── config
+├── controllers
+├── middleware
+├── models
+├── routes
+├── services
+└── utils
+```
 
 # Features
 - User API
