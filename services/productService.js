@@ -56,10 +56,13 @@ const getAllProductList = async (optionsInfo) => {
 };
 
 const getProductById = async (productId) => {
-  const result = await productDao.getProductById(productId);
-  if (result.length === 0) {
+
+  const productExist = await productDao.getProductByIdToCheck(productId)
+
+  if (productExist.length === 0) {
     throw { status: 404, message: "PRODUCT_DOES_NOT_EXIST" };
   } else {
+    const result = await productDao.getProductById(productId)
     return result;
   }
 };

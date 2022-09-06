@@ -373,6 +373,18 @@ const getSortedProducts = async (optionsInfo) => {
     return rows;
 };
 
+const getProductByIdToCheck = async (productId) => {
+    const sql = `
+        SELECT 
+            p.id
+        FROM 
+            products AS p
+        WHERE 
+            p.id = ${productId}`
+    const [rows, ] = await db.query(sql);
+    return rows
+}
+
 const getProductById = async (productId) => {
     const sql = `
         SELECT 
@@ -407,4 +419,5 @@ module.exports = {
     getSortedProductsWithSizeFilter,
     getSortedProducts,
     getProductById,
+    getProductByIdToCheck
 };
