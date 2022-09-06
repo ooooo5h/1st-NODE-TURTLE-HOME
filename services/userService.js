@@ -6,6 +6,12 @@ const createRefreshToken = require("../utils/jwt").createRefreshToken;
 
 const signUp = async (user) => {
 
+    const userByEmail = await userDao.getUserByEmail(user.email)
+    
+    if (userByEmail.length) {
+        throw {status : 409, message : "EMAIL_ALREADY_IN_USE"};
+    }
+
     if (!pwValidation.test(user.password)) {
         const err = new Error("PASSWORD_IS_NOT_VALID");
         err.status = 400;

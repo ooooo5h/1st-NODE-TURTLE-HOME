@@ -43,6 +43,19 @@
 *                message:
 *                    type: string
 *                    example: "KEY_ERROR or PASSWORD_IS_NOT_VALID"
+*      409:
+*        description: 이메일 중복
+*        content:
+*          application/json:
+*            schema:
+*              type: object
+*              properties:
+*                status:
+*                    type: number
+*                    example: 409
+*                message:
+*                    type: string
+*                    example: "EMAIL_ALREADY_IN_USE"
 *      201:
 *        description: 회원가입 성공
 *        content:
