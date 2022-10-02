@@ -1,4 +1,4 @@
-const db = require("../utils/database");
+const {myDataSource} = require("../utils/database");
 
 const getUserByRefreshToken = async (refreshToken) => {
     const sql = `
@@ -9,7 +9,7 @@ const getUserByRefreshToken = async (refreshToken) => {
     WHERE
         u.refresh_token = "${refreshToken}"
     `
-    const [rows, ] = await db.query(sql)
+    const [rows, ] = await myDataSource.query(sql)
     return rows
 }
 

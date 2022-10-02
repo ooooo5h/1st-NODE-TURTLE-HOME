@@ -1,4 +1,4 @@
-const db = require("../utils/database");
+const {myDataSource} = require("../utils/database");
 
 const checkIfProductExists = async (productId, sizeId) => {
     const sql = `
@@ -12,7 +12,7 @@ const checkIfProductExists = async (productId, sizeId) => {
             po.product_id = p.id
         WHERE 
             p.id=${productId} AND po.size_id=${sizeId};`
-    const [rows, ] = await db.query(sql);
+    const [rows, ] = await myDataSource.query(sql);
     return rows
 }
 
@@ -28,7 +28,7 @@ const checkCartId = async (productId, sizeId, userId) => {
             c.product_option_id = po.id
         WHERE 
             po.product_id=${productId} AND po.size_id=${sizeId} AND c.user_id=${userId};`
-    const [rows, ] = await db.query(sql);
+    const [rows, ] = await myDataSource.query(sql);
     return rows
 }
 
@@ -40,7 +40,7 @@ const getProductOptionId = async (productId, sizeId) => {
             products_options AS po
         WHERE 
             po.product_id = ${productId} AND po.size_id = ${sizeId}`
-    const [rows, ] = await db.query(sql);
+    const [rows, ] = await myDataSource.query(sql);
     return rows
 }
 
@@ -51,7 +51,7 @@ const createCart = async (productOptionId, quantity, userId) => {
             (quantity, product_option_id, user_id) 
         VALUES
             (${quantity}, ${productOptionId}, ${userId})`
-    await db.query(sql);
+    await myDataSource.query(sql);
 }
 
 const addCart = async (productOptionId, quantity, userId) => {
@@ -62,7 +62,7 @@ const addCart = async (productOptionId, quantity, userId) => {
             c.quantity = c.quantity + ${quantity}
         WHERE
             c.product_option_id = ${productOptionId} AND c.user_id = ${userId}`
-    await db.query(sql);    
+    await myDataSource.query(sql);    
 }
 
 const getCartByUserId = async (userId) => {
@@ -85,7 +85,7 @@ const getCartByUserId = async (userId) => {
             po.size_id = s.id
         WHERE
             c.user_id = ${userId}`
-    const [rows, ] = await db.query(sql)
+    const [rows, ] = await myDataSource.query(sql)
     return rows
 }
 
@@ -97,7 +97,7 @@ const getCartById = async (cartId) => {
             carts AS c 
         WHERE c.id = ${cartId};
         `
-    const [rows, ] = await db.query(sql)
+    const [rows, ] = await myDataSource.query(sql)
     return rows
 }
 
@@ -109,7 +109,7 @@ const getCartMatchWithUserID = async (userId, cartId) => {
             carts AS c
         WHERE 
             c.user_id = ${userId} AND c.id = ${cartId};`
-    const [rows, ] = await db.query(sql)
+    const [rows, ] = await myDataSource.query(sql)
     return rows
 }
 
@@ -117,20 +117,20 @@ const deleteCartById = async (cartId) => {
     const sql = `
         DELETE 
         FROM 
-            carts AS c 
-        WHERE c.id = ${cartId};`
-    await db.query(sql)
+            carts 
+        WHERE carts.id = ${cartId};`
+    await myDataSource.query(sql)
 }
 
 const deleteAllCartByUserId = async (userId) => {
     const sql = `
     DELETE
     FROM 
-        carts AS c
+        carts
     WHERE 
-        c.user_id = ${userId};
+        carts.user_id = ${userId};
     `
-    await db.query(sql);
+    await myDataSource.query(sql);
 }
 
 module.exports = {

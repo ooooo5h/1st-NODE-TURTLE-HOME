@@ -10,7 +10,7 @@ const createAccessToken = (user) => {
     const expiresIn = config.tokenExpiresIn;
     const option    = {algorithm, expiresIn, issuer};
 
-    return jwt.sign({ id:user[0].id }, secretKey, option );
+    return jwt.sign({ id:user.id }, secretKey, option );
 } 
 
 const createRefreshToken = () => {

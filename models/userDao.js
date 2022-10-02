@@ -1,4 +1,4 @@
-const db = require("../utils/database");
+const { myDataSource } = require("../utils/database");
 
 const createUser = async (user) => {
   const sql = `
@@ -7,7 +7,7 @@ const createUser = async (user) => {
         (korean_name, email, password, address, phone_number) 
     VALUES 
         ('${user.korean_name}', '${user.email}', '${user.password}', '${user.address}', '${user.phone_number}');`;
-    await db.query(sql);
+    await myDataSource.query(sql);
 };
 
 const getUserByEmail = async (userEmail) => {
@@ -19,7 +19,7 @@ const getUserByEmail = async (userEmail) => {
     WHERE 
         email = '${userEmail}';
     `
-    const [rows, ] = await db.query(sql);
+    const [rows, ] = await myDataSource.query(sql);
     return rows
 }
 
@@ -32,7 +32,7 @@ const getUserById = async (userId) => {
     WHERE
         users.id = ${userId}
     `
-    const [rows, ] = await db.query(sql);
+    const [rows, ] = await myDataSource.query(sql);
     return rows
 }
 
@@ -45,7 +45,7 @@ const saveUserRefreshToken = async (userId, refreshToken) => {
     WHERE
         users.id = ${userId}
     `
-    await db.query(sql);
+    await myDataSource.query(sql);
 }
 
 module.exports = {

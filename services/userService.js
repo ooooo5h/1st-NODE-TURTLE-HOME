@@ -8,7 +8,7 @@ const signUp = async (user) => {
 
     const userByEmail = await userDao.getUserByEmail(user.email)
     
-    if (userByEmail.length) {
+    if (userByEmail) {
         throw {status : 409, message : "EMAIL_ALREADY_IN_USE"};
     }
 
@@ -29,18 +29,18 @@ const signUp = async (user) => {
 const signIn = async (user) => {
     const userByEmail = await userDao.getUserByEmail(user.email)
     
-    if (userByEmail.length === 0) {
+    if (!userByEmail) {
         throw {status : 404, message : "USER_DOES_NOT_EXIST"};
     }
 
-    const checkedPasswordUser = await bcrypt.compare(user.password, userByEmail[0].password);
+    const checkedPasswordUser = await bcrypt.compare(user.password, userByEmail.password);
 
     if (checkedPasswordUser) {
         const accessToken  = createAccessToken(userByEmail);
         const refreshToken = createRefreshToken();
 
-        await userDao.saveUserRefreshToken(userByEmail[0].id, refreshToken)
-        return {accessToken, refreshToken, user : userByEmail[0].korean_name}
+        await userDao.saveUserRefreshToken(userByEmail.id, refreshToken)
+        return {accessToken, refreshToken, user : userByEmail.korean_name}
     } else {
         throw {status : 404, message : "PASSWORD_DOES_NOT_MATCH"};
     }

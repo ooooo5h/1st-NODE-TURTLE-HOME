@@ -1,73 +1,4 @@
-const db = require("../utils/database");
-
-// const getAllProducts = async (filterInfo) => {
-//     let sql ;
-//     if (!filterInfo.min_price) {
-//         sql = `
-//         SELECT 
-//             p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
-//         FROM 
-//             products AS p
-//         JOIN 
-//             products_options AS options_min
-//                 ON options_min.id = (
-//                     SELECT id
-//                     FROM products_options 
-//                     WHERE products_options.product_id = p.id
-//                     ORDER BY price ASC
-//                     LIMIT 1)
-//         JOIN 
-//             products_options AS options_max
-//                 ON options_max.id = (
-//                     SELECT id
-//                     FROM products_options 
-//                     WHERE products_options.product_id = p.id
-//                     ORDER BY price DESC
-//                     LIMIT 1)
-//         JOIN
-//             products_options AS po ON po.product_id = p.id
-//         WHERE 
-//             po.size_id = ${filterInfo.size}
-//         LIMIT 
-//             ${filterInfo.limit}
-//         OFFSET
-//             ${filterInfo.offset};`
-//     } else {
-//         sql = `
-//         SELECT 
-//             p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
-//         FROM 
-//             products AS p
-//         JOIN 
-//             products_options AS options_min
-//                 ON options_min.id = (
-//                     SELECT id
-//                     FROM products_options 
-//                     WHERE products_options.product_id = p.id
-//                     ORDER BY price ASC
-//                     LIMIT 1)
-//         JOIN 
-//             products_options AS options_max
-//                 ON options_max.id = (
-//                     SELECT id
-//                     FROM products_options 
-//                     WHERE products_options.product_id = p.id
-//                     ORDER BY price DESC
-//                     LIMIT 1)
-//         JOIN
-//             products_options AS po ON po.product_id = p.id
-//         WHERE 
-//             options_min.price < ${filterInfo.max_price} AND options_min.price > ${filterInfo.min_price}
-//         AND 
-//             po.size_id = ${filterInfo.size}
-//         LIMIT 
-//             ${filterInfo.limit}
-//         OFFSET
-//             ${filterInfo.offset};`
-//     }
-//     const [rows, ] = await db.query(sql);
-//     return rows;
-// };
+const {myDataSource} = require("../utils/database");
 
 const getAllProducts = async (filterInfo) => {
     // LIMIT과 OFFSET만 적용된 코드 , 노정렬, 노필터
@@ -96,7 +27,7 @@ const getAllProducts = async (filterInfo) => {
         ${filterInfo.limit}
     OFFSET
         ${filterInfo.offset};`
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows;
 };
 
@@ -129,7 +60,7 @@ const getAllProductsWithPriceFilter = async (optionsInfo) => {
         ${optionsInfo.limit}
     OFFSET
         ${optionsInfo.offset};`
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows
 }
 
@@ -166,7 +97,7 @@ const getAllProductsWithPriceAndSizeFilter = async (optionsInfo) => {
         ${optionsInfo.limit}
     OFFSET
         ${optionsInfo.offset};`
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows
 }
 
@@ -201,7 +132,7 @@ const getAllProductsWithSizeFilter = async (optionsInfo) => {
         ${optionsInfo.limit}
     OFFSET
         ${optionsInfo.offset};`
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows
 }
 
@@ -242,7 +173,7 @@ const getSortedProductsWithPrice = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows;
 };
 
@@ -287,7 +218,7 @@ const getSortedProductsWithPriceAndSizeFilter = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows;
 };
 
@@ -330,7 +261,7 @@ const getSortedProductsWithSizeFilter = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows;
 };
 
@@ -369,7 +300,7 @@ const getSortedProducts = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const [rows, ] = await db.query(sql);
+    const rows = await myDataSource.query(sql);
     return rows;
 };
 
@@ -381,7 +312,7 @@ const getProductByIdToCheck = async (productId) => {
             products AS p
         WHERE 
             p.id = ${productId}`
-    const [rows, ] = await db.query(sql);
+    const [rows, ] = await myDataSource.query(sql);
     return rows
 }
 
@@ -398,9 +329,7 @@ const getProductById = async (productId) => {
         WHERE 
             p.id=${productId};`
 
-    const [rows, ] = await db.query(sql);
-
-    const data = rows[0] 
+    const [data, ] = await myDataSource.query(sql);
 
     data.options = data.options.split('@')
     data.options = data.options.map(result => {

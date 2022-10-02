@@ -26,7 +26,7 @@ const getAllProductList = async (optionsInfo) => {
     } else { 
       // 가격필터 없고 사이즈 없고
       console.log('정렬 X 가격필터 X 사이즈 X => 그냥 전체 상품 보내주기')
-      result = productDao.getAllProducts(optionsInfo)
+      result = await productDao.getAllProducts(optionsInfo)
     }
 
   } else {
@@ -59,7 +59,7 @@ const getProductById = async (productId) => {
 
   const productExist = await productDao.getProductByIdToCheck(productId)
 
-  if (productExist.length === 0) {
+  if (!productExist) {
     throw { status: 404, message: "PRODUCT_DOES_NOT_EXIST" };
   } else {
     const result = await productDao.getProductById(productId)
