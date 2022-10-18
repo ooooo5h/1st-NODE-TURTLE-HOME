@@ -40,3 +40,5 @@
 
 # API 명세서
 - <a>http://localhost:4000/api-docs/#/</a>
+<img width="1586" alt="스크린샷 2022-10-18 오후 3 39 09" src="https://user-images.githubusercontent.com/78359232/196354431-8bed332d-309b-4430-b5c2-e8944f938df9.png">
+
