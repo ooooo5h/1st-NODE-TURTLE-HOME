@@ -27,6 +27,8 @@ const getAllProductList = async (optionsInfo) => {
       console.log("정렬 X 가격필터 X 사이즈 X => 그냥 전체 상품 보내주기");
       result = await productDao.getAllProducts(optionsInfo);
     }
+  } else if (optionsInfo.sort > 3) {
+    throw { status: 404, message: "SORT_OPTION_ONLY_AVAILABLE_IN_1,2,3" };
   } else {
     // ##### step 1-2 :정렬 한다!
     if (optionsInfo.min_price && optionsInfo.size == 0) {
@@ -57,10 +59,8 @@ const getProductById = async (productId) => {
 
   if (!productExist) {
     throw { status: 404, message: "PRODUCT_DOES_NOT_EXIST" };
-  } else {
-    const result = await productDao.getProductById(productId);
-    return result;
   }
+  return await productDao.getProductById(productId);
 };
 
 module.exports = {
