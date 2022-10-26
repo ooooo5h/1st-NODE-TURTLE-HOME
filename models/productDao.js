@@ -1,8 +1,8 @@
-const {myDataSource} = require("../utils/database");
+const { myDataSource } = require("../utils/database");
 
 const getAllProducts = async (filterInfo) => {
-    // LIMIT과 OFFSET만 적용된 코드 , 노정렬, 노필터
-    const sql = `
+  // LIMIT과 OFFSET만 적용된 코드 , 노정렬, 노필터
+  const sql = `
     SELECT 
         p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
     FROM 
@@ -26,14 +26,14 @@ const getAllProducts = async (filterInfo) => {
     LIMIT 
         ${filterInfo.limit}
     OFFSET
-        ${filterInfo.offset};`
-    const rows = await myDataSource.query(sql);
-    return rows;
+        ${filterInfo.offset};`;
+  const rows = await myDataSource.query(sql);
+  return rows;
 };
 
 const getAllProductsWithPriceFilter = async (optionsInfo) => {
-    // 노정렬, 가격 필터만
-    const sql = `
+  // 노정렬, 가격 필터만
+  const sql = `
     SELECT 
         p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
     FROM 
@@ -59,14 +59,14 @@ const getAllProductsWithPriceFilter = async (optionsInfo) => {
     LIMIT 
         ${optionsInfo.limit}
     OFFSET
-        ${optionsInfo.offset};`
-    const rows = await myDataSource.query(sql);
-    return rows
-}
+        ${optionsInfo.offset};`;
+  const rows = await myDataSource.query(sql);
+  return rows;
+};
 
 const getAllProductsWithPriceAndSizeFilter = async (optionsInfo) => {
-    // 노정렬, 가격필터 + 사이즈필터
-    const sql = `
+  // 노정렬, 가격필터 + 사이즈필터
+  const sql = `
     SELECT 
         p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
     FROM 
@@ -96,14 +96,14 @@ const getAllProductsWithPriceAndSizeFilter = async (optionsInfo) => {
     LIMIT 
         ${optionsInfo.limit}
     OFFSET
-        ${optionsInfo.offset};`
-    const rows = await myDataSource.query(sql);
-    return rows
-}
+        ${optionsInfo.offset};`;
+  const rows = await myDataSource.query(sql);
+  return rows;
+};
 
 const getAllProductsWithSizeFilter = async (optionsInfo) => {
-    // 노정렬, 사이즈필터
-    const sql = `
+  // 노정렬, 사이즈필터
+  const sql = `
     SELECT 
         p.id, p.name, p.image_url, options_min.price AS min_price, options_max.price AS max_price
     FROM 
@@ -131,19 +131,19 @@ const getAllProductsWithSizeFilter = async (optionsInfo) => {
     LIMIT 
         ${optionsInfo.limit}
     OFFSET
-        ${optionsInfo.offset};`
-    const rows = await myDataSource.query(sql);
-    return rows
-}
+        ${optionsInfo.offset};`;
+  const rows = await myDataSource.query(sql);
+  return rows;
+};
 
 const getSortedProductsWithPrice = async (optionsInfo) => {
-    const sortObject = {
-        1: "ORDER BY p.created_at DESC",
-        2: "ORDER BY min_price DESC",
-        3: "ORDER BY min_price ASC",
-    };
+  const sortObject = {
+    1: "ORDER BY p.created_at DESC",
+    2: "ORDER BY min_price DESC",
+    3: "ORDER BY min_price ASC",
+  };
 
-    const sql = `
+  const sql = `
         SELECT 
             p.id, p.name, p.image_url, options_min.price as min_price, options_max.price as max_price
         FROM 
@@ -167,24 +167,26 @@ const getSortedProductsWithPrice = async (optionsInfo) => {
                     LIMIT 1
                 )
         WHERE 
-            options_min.price < ${optionsInfo.max_price} AND options_min.price > ${optionsInfo.min_price}
+            options_min.price < ${
+              optionsInfo.max_price
+            } AND options_min.price > ${optionsInfo.min_price}
         ${sortObject[`${optionsInfo.sort}`]}
         LIMIT 
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const rows = await myDataSource.query(sql);
-    return rows;
+  const rows = await myDataSource.query(sql);
+  return rows;
 };
 
 const getSortedProductsWithPriceAndSizeFilter = async (optionsInfo) => {
-    const sortObject = {
-        1: "ORDER BY p.created_at DESC",
-        2: "ORDER BY min_price DESC",
-        3: "ORDER BY min_price ASC",
-    };
+  const sortObject = {
+    1: "ORDER BY p.created_at DESC",
+    2: "ORDER BY min_price DESC",
+    3: "ORDER BY min_price ASC",
+  };
 
-    const sql = `
+  const sql = `
         SELECT 
             p.id, p.name, p.image_url, options_min.price as min_price, options_max.price as max_price
         FROM 
@@ -210,7 +212,9 @@ const getSortedProductsWithPriceAndSizeFilter = async (optionsInfo) => {
         JOIN
             products_options AS po ON po.product_id = p.id
         WHERE 
-            options_min.price < ${optionsInfo.max_price} AND options_min.price > ${optionsInfo.min_price}
+            options_min.price < ${
+              optionsInfo.max_price
+            } AND options_min.price > ${optionsInfo.min_price}
         AND
             po.size_id = ${optionsInfo.size}
         ${sortObject[`${optionsInfo.sort}`]}
@@ -218,18 +222,18 @@ const getSortedProductsWithPriceAndSizeFilter = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const rows = await myDataSource.query(sql);
-    return rows;
+  const rows = await myDataSource.query(sql);
+  return rows;
 };
 
 const getSortedProductsWithSizeFilter = async (optionsInfo) => {
-    const sortObject = {
-        1: "ORDER BY p.created_at DESC",
-        2: "ORDER BY min_price DESC",
-        3: "ORDER BY min_price ASC",
-    };
+  const sortObject = {
+    1: "ORDER BY p.created_at DESC",
+    2: "ORDER BY min_price DESC",
+    3: "ORDER BY min_price ASC",
+  };
 
-    const sql = `
+  const sql = `
         SELECT 
             p.id, p.name, p.image_url, options_min.price as min_price, options_max.price as max_price
         FROM 
@@ -261,18 +265,18 @@ const getSortedProductsWithSizeFilter = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const rows = await myDataSource.query(sql);
-    return rows;
+  const rows = await myDataSource.query(sql);
+  return rows;
 };
 
 const getSortedProducts = async (optionsInfo) => {
-    const sortObject = {
-        1: "ORDER BY p.created_at DESC",
-        2: "ORDER BY min_price DESC",
-        3: "ORDER BY min_price ASC",
-    };
+  const sortObject = {
+    1: "ORDER BY p.created_at DESC",
+    2: "ORDER BY min_price DESC",
+    3: "ORDER BY min_price ASC",
+  };
 
-    const sql = `
+  const sql = `
         SELECT 
             p.id, p.name, p.image_url, options_min.price as min_price, options_max.price as max_price
         FROM 
@@ -300,24 +304,24 @@ const getSortedProducts = async (optionsInfo) => {
             ${optionsInfo.limit}
         OFFSET
             ${optionsInfo.offset}`;
-    const rows = await myDataSource.query(sql);
-    return rows;
+  const rows = await myDataSource.query(sql);
+  return rows;
 };
 
 const getProductByIdToCheck = async (productId) => {
-    const sql = `
+  const sql = `
         SELECT 
             p.id
         FROM 
             products AS p
         WHERE 
-            p.id = ${productId}`
-    const [rows, ] = await myDataSource.query(sql);
-    return rows
-}
+            p.id = ${productId}`;
+  const [rows] = await myDataSource.query(sql);
+  return rows;
+};
 
 const getProductById = async (productId) => {
-    const sql = `
+  const sql = `
         SELECT 
             p.id, p.name, p.number, p.description, p.image_url, group_concat(json_object('size', s.name, 'price', po.price) separator '@') as options
         FROM 
@@ -327,26 +331,26 @@ const getProductById = async (productId) => {
         INNER JOIN 
             sizes as s on s.id = po.size_id
         WHERE 
-            p.id=${productId};`
+            p.id=${productId};`;
 
-    const [data, ] = await myDataSource.query(sql);
+  const [data] = await myDataSource.query(sql);
 
-    data.options = data.options.split('@')
-    data.options = data.options.map(result => {
-        return JSON.parse(result)
-    })
-    return data
+  data.options = data.options.split("@");
+  data.options = data.options.map((result) => {
+    return JSON.parse(result);
+  });
+  return data;
 };
 
 module.exports = {
-    getAllProducts,
-    getAllProductsWithPriceFilter,
-    getAllProductsWithPriceAndSizeFilter,
-    getAllProductsWithSizeFilter,
-    getSortedProductsWithPrice,
-    getSortedProductsWithPriceAndSizeFilter,
-    getSortedProductsWithSizeFilter,
-    getSortedProducts,
-    getProductById,
-    getProductByIdToCheck
+  getAllProducts,
+  getAllProductsWithPriceFilter,
+  getAllProductsWithPriceAndSizeFilter,
+  getAllProductsWithSizeFilter,
+  getSortedProductsWithPrice,
+  getSortedProductsWithPriceAndSizeFilter,
+  getSortedProductsWithSizeFilter,
+  getSortedProducts,
+  getProductById,
+  getProductByIdToCheck,
 };
