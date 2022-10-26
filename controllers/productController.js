@@ -1,15 +1,15 @@
-const productService = require("../services/productService");
-const errorHandler   = require("../utils/errorHandler").errorHandler;
+const { productService } = require("../services");
+const { errorHandler } = require("../utils/errorHandler");
 
 const getAllProducts = async (req, res) => {
   try {
     const optionsDto = {
-      sort     : req.query.sort ?? 0,
+      sort: req.query.sort ?? 0,
       min_price: req.query.min_price,
       max_price: req.query.max_price,
-      size     : req.query.size?? 0,
-      offset   : req.query.offset?? 0,
-      limit    : req.query.limit?? 20,
+      size: req.query.size ?? 0,
+      offset: req.query.offset ?? 0,
+      limit: req.query.limit ?? 20,
     };
     const result = await productService.getAllProductList(optionsDto);
     return res.status(200).json({ result: result });

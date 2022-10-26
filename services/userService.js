@@ -1,52 +1,56 @@
-const userDao            = require("../models/userDao");
-const bcrypt             = require("bcrypt");
-const pwValidation       = require("../utils/pwValidation").pwValidation;
-const createAccessToken  = require("../utils/jwt").createAccessToken;
+const { userDao } = require("../models");
+const bcrypt = require("bcrypt");
+const {
+  nameValidation,
+  passwordValidation,
+  emailValidation,
+  phoneValidation,
+} = require("../utils/validation");
+const createAccessToken = require("../utils/jwt").createAccessToken;
 const createRefreshToken = require("../utils/jwt").createRefreshToken;
 
-const signUp = async (user) => {
+const signUp = async (userDto) => {
+  const userByEmail = await userDao.getUserByEmail(userDto.email);
 
-    const userByEmail = await userDao.getUserByEmail(user.email)
-    
-    if (userByEmail) {
-        throw {status : 409, message : "EMAIL_ALREADY_IN_USE"};
-    }
+  if (userByEmail) {
+    throw { status: 409, message: "EMAIL_ALREADY_IN_USE" };
+  }
 
-    if (!pwValidation.test(user.password)) {
-        const err = new Error("PASSWORD_IS_NOT_VALID");
-        err.status = 400;
-        throw err;
-    }
+  nameValidation(userDto.korean_name);
+  passwordValidation(userDto.password);
+  emailValidation(userDto.email);
+  phoneValidation(userDto.phone_number);
 
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    user.password = hashedPassword
+  const hashedPassword = await bcrypt.hash(userDto.password, 10);
+  userDto.password = hashedPassword;
 
-    await userDao.createUser(
-        user
-    );
-}
+  await userDao.createUser(userDto);
+};
 
-const signIn = async (user) => {
-    const userByEmail = await userDao.getUserByEmail(user.email)
-    
-    if (!userByEmail) {
-        throw {status : 404, message : "USER_DOES_NOT_EXIST"};
-    }
+const signIn = async (userDto) => {
+  const userByEmail = await userDao.getUserByEmail(userDto.email);
 
-    const checkedPasswordUser = await bcrypt.compare(user.password, userByEmail.password);
+  if (!userByEmail) {
+    throw { status: 404, message: "USER_DOES_NOT_EXIST" };
+  }
 
-    if (checkedPasswordUser) {
-        const accessToken  = createAccessToken(userByEmail);
-        const refreshToken = createRefreshToken();
+  const checkedPasswordUser = await bcrypt.compare(
+    userDto.password,
+    userByEmail.password
+  );
 
-        await userDao.saveUserRefreshToken(userByEmail.id, refreshToken)
-        return {accessToken, refreshToken, user : userByEmail.korean_name}
-    } else {
-        throw {status : 404, message : "PASSWORD_DOES_NOT_MATCH"};
-    }
-}
+  if (!checkedPasswordUser) {
+    throw { status: 404, message: "PASSWORD_DOES_NOT_MATCH" };
+  }
+
+  const accessToken = createAccessToken(userByEmail);
+  const refreshToken = createRefreshToken();
+
+  await userDao.saveUserRefreshToken(userByEmail.id, refreshToken);
+  return { accessToken, refreshToken, user: userByEmail.korean_name };
+};
 
 module.exports = {
-    signUp,
-    signIn
-}
+  signUp,
+  signIn,
+};
