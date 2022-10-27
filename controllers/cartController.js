@@ -25,28 +25,22 @@ const createCart = async (req, res) => {
 const getCartByUserId = async (req, res) => {
   try {
     const userId = req.user;
-    const pathUserId = req.params.userId;
-
-    if (userId == pathUserId) {
-      const resultMessage = await cartService.getCartByUserId(userId);
-      return res.status(200).json({ message: resultMessage });
-    } else {
-      throw { status: 401, message: "USER_DOES_NOT_MATCH" };
-    }
+    
+    const resultMessage = await cartService.getCartByUserId(userId);
+    return res.status(200).json({ data: resultMessage });
   } catch (e) {
     errorHandler(e, res);
   }
 };
 
-const deleteCart = async (req, res) => {
+const deleteCartByCartId = async (req, res) => {
   try {
     const cartId = req.params.cartId;
     const userId = req.user;
 
     await cartService.getCartByIdAndUserId(userId, cartId);
-
-    const resultMessage = await cartService.deleteCart(cartId);
-    return res.status(200).json({ message: resultMessage });
+    await cartService.deleteCartByCartId(cartId);
+    return res.status(200).json({ message: "CART_DELETED_SUCCESSFULLY" });
   } catch (e) {
     errorHandler(e, res);
   }
@@ -66,6 +60,6 @@ const deleteAllCart = async (req, res) => {
 module.exports = {
   createCart,
   getCartByUserId,
-  deleteCart,
+  deleteCartByCartId,
   deleteAllCart,
 };
