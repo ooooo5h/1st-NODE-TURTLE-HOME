@@ -4,9 +4,9 @@ const { userDao } = require("../models");
 const createCart = async (productId, sizeId, quantity, userId) => {
   const product = await cartDao.checkIfProductExists(productId, sizeId);
 
-  if (product.length === 0) {
+  if (!product) {
     const err = new Error("PRODUCT_DOES_NOT_EXIST");
-    err.status = 400;
+    err.status = 404;
     throw err;
   }
 
@@ -19,26 +19,17 @@ const createCart = async (productId, sizeId, quantity, userId) => {
   if (!alreadyInCart) {
     await cartDao.createCart(productOptionId.id, quantity, userId);
     return "CART_CREATED_SUCCESSFULLY";
-  } else {
-    await cartDao.addCart(productOptionId.id, quantity, userId);
-    return "PRODUCT_QUANTITY_UPDATED_SUCCESSFULLY";
   }
+  await cartDao.addCart(productOptionId.id, quantity, userId);
+  return "PRODUCT_QUANTITY_UPDATED_SUCCESSFULLY";
 };
 
 const getCartByUserId = async (userId) => {
-  const existUser = await userDao.getUserById(userId);
-
-  if (existUser) {
-    const existUserId = existUser.id;
-    const result = await cartDao.getCartByUserId(existUserId);
-    if (result.length === 0) {
-      throw { status: 404, message: "CART_DOES_NOT_EXIST" };
-    } else {
-      return result;
-    }
-  } else {
-    throw { status: 404, message: "USER_DOES_NOT_MATCH" };
+  const result = await cartDao.getCartByUserId(userId);
+  if (!result) {
+    throw { status: 404, message: "CART_DOES_NOT_EXIST" };
   }
+  return result;
 };
 
 const getCartByIdAndUserId = async (userId, cartId) => {
@@ -49,20 +40,12 @@ const getCartByIdAndUserId = async (userId, cartId) => {
 
   if (!existCartMatchWithUserID) {
     throw { status: 404, message: "CART_DOES_NOT_EXIST" };
-  } else {
-    return existCartMatchWithUserID;
   }
+  return;
 };
 
-const deleteCart = async (cartId) => {
-  const existCartId = await cartDao.getCartById(cartId);
-
-  if (existCartId.length === 0) {
-    throw { status: 404, message: "CART_DOES_NOT_EXIST" };
-  } else {
-    await cartDao.deleteCartById(cartId);
-    return "CART_DELETED_SUCCESSFULLY";
-  }
+const deleteCartByCartId = async (cartId) => {
+  return await cartDao.deleteCartById(cartId);
 };
 
 const deleteAllCart = async (userId) => {
@@ -70,16 +53,14 @@ const deleteAllCart = async (userId) => {
 
   if (!existCart) {
     throw { status: 404, message: "CART_DOES_NOT_EXIST" };
-  } else {
-    await cartDao.deleteAllCartByUserId(userId);
-    return "CART_DELETED_SUCCESSFULLY";
   }
+  return await cartDao.deleteAllCartByUserId(userId);
 };
 
 module.exports = {
   createCart,
   getCartByUserId,
   getCartByIdAndUserId,
-  deleteCart,
+  deleteCartByCartId,
   deleteAllCart,
 };
