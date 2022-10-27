@@ -50,7 +50,27 @@ const signIn = async (userDto) => {
   return { accessToken, refreshToken, user: userByEmail.korean_name };
 };
 
+const updatePassword = async (name, phone_number, email, new_password) => {
+  const emailExistUser = await userDao.getUserByEmail(email);
+
+  if (!emailExistUser) {
+    throw { status: 404, message: "USER_NOT_FOUND" };
+  }
+
+  if (
+    emailExistUser.korean_name === name &&
+    emailExistUser.phone_number === phone_number
+  ) {
+    passwordValidation(new_password);
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    return await userDao.updatePassword(email, hashedPassword);
+  }
+
+  throw { status: 404, message: "CHECK_USER_INFO" };
+};
+
 module.exports = {
   signUp,
   signIn,
+  updatePassword,
 };

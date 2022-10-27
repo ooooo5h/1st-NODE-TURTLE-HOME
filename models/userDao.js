@@ -23,7 +23,7 @@ const getUserByEmail = async (userEmail) => {
   const [rows] = await myDataSource.query(
     `
   SELECT 
-      id, korean_name, password 
+      id, korean_name, password, phone_number 
   FROM 
       users
   WHERE 
@@ -63,9 +63,24 @@ const saveUserRefreshToken = async (userId, refreshToken) => {
   );
 };
 
+const updatePassword = async (email, password) => {
+  await myDataSource.query(
+    `
+  UPDATE 
+    users
+  SET
+    users.password = ?
+  WHERE
+    users.email = ?
+  `,
+    [password, email]
+  );
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
   getUserById,
   saveUserRefreshToken,
+  updatePassword,
 };

@@ -41,7 +41,23 @@ const signIn = async (req, res) => {
   }
 };
 
+const updatePassword = async (req, res) => {
+  try {
+    const { name, phone_number, email, password } = req.body;
+
+    if (!name || !phone_number || !email || !password) {
+      throw { status: 400, message: "KEY_ERROR" };
+    }
+
+    await userService.updatePassword(name, phone_number, email, password);
+    return res.status(200).json({ message: "PASSWORD_UPDATED" });
+  } catch (e) {
+    errorHandler(e, res);
+  }
+};
+
 module.exports = {
   signUp,
   signIn,
+  updatePassword,
 };
